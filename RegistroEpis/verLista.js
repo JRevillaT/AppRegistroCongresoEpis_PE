@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, FlatList, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function VerListaScreen() {
   const [registros, setRegistros] = useState([]);
-  const [tarjetaAnchos, setTarjetaAnchos] = useState({});
+  const cardWidth = 250; // Ancho fijo para cada card
 
   useEffect(() => {
     const cargarRegistros = async () => {
@@ -22,36 +22,21 @@ function VerListaScreen() {
     cargarRegistros();
   }, []);
 
-  const calcularAnchoTarjeta = (index, width) => {
-    setTarjetaAnchos((prevAnchos) => ({
-      ...prevAnchos,
-      [index]: width,
-    }));
-  };
-
   // Función para renderizar cada tarjeta de registro
-  const renderRegistro = ({ item, index }) => (
-    <ScrollView contentContainerStyle={styles.cardContainer}>
-      <View
-        style={[
-          styles.card,
-          { width: tarjetaAnchos[index] || 'auto' }, // Ancho basado en el contenido
-        ]}
-        onLayout={(e) => calcularAnchoTarjeta(index, e.nativeEvent.layout.width)}
-      >
-        <Text style={styles.label}>Nombre:</Text>
-        <Text style={styles.text}>{item.nombre}</Text>
-        
-        <Text style={styles.label}>Edad:</Text>
-        <Text style={styles.text}>{item.edad} años</Text>
-        
-        <Text style={styles.label}>Fecha de Registro:</Text>
-        <Text style={styles.text}>{item.fechaRegistro}</Text>
-        
-        <Text style={styles.label}>Universidad:</Text>
-        <Text style={styles.text}>{item.universidad}</Text>
-      </View>
-    </ScrollView>
+  const renderRegistro = ({ item }) => (
+    <View style={[styles.card, { width: cardWidth }]}>
+      <Text style={styles.label}>Nombre:</Text>
+      <Text style={styles.text}>{item.nombre}</Text>
+      
+      <Text style={styles.label}>Edad:</Text>
+      <Text style={styles.text}>{item.edad} años</Text>
+      
+      <Text style={styles.label}>Fecha de Registro:</Text>
+      <Text style={styles.text}>{item.fechaRegistro}</Text>
+      
+      <Text style={styles.label}>Universidad:</Text>
+      <Text style={styles.text}>{item.universidad}</Text>
+    </View>
   );
 
   return (
@@ -61,7 +46,8 @@ function VerListaScreen() {
         data={registros}
         keyExtractor={(item, index) => index.toString()}
         renderItem={renderRegistro}
-        style={styles.list}
+        horizontal={true} // Mostrar elementos en una fila horizontal
+        contentContainerStyle={styles.cardContainer}
       />
     </View>
   );
@@ -70,9 +56,8 @@ function VerListaScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
     padding: 10,
-    justifyContent: 'center', // Centra verticalmente los elementos
+    alignItems: 'flex-start', // Alinear elementos en la parte superior
   },
   title: {
     fontSize: 24,
@@ -80,13 +65,14 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   cardContainer: {
-    alignItems: 'center', // Centra horizontalmente los elementos dentro del card
+    alignItems: 'flex-start', // Alinear elementos en la parte superior
+    paddingVertical: 10, // Espacio vertical entre las tarjetas
   },
   card: {
-    backgroundColor: '#ffffff',
+    backgroundColor: '#e2e2e2',
     borderRadius: 10,
-    padding: 10,
-    marginBottom: 10,
+    padding: 15, // Aumentar el espacio interno
+    marginHorizontal: 10, // Margen horizontal entre las tarjetas
     elevation: 3, // Sombra en Android
     shadowColor: '#000', // Sombra en iOS
     shadowOffset: { width: 0, height: 2 },
@@ -99,10 +85,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
-    marginBottom: 5,
-  },
-  list: {
-    width: '100%',
+    marginBottom: 8, // Aumentar el espacio inferior
   },
 });
 

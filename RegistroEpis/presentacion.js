@@ -6,7 +6,7 @@ import { View, Text, FlatList, StyleSheet, Image } from 'react-native';
 const ponentesData = [
   {
     id: '1',
-    nombre: 'Gabriel Callo',
+    nombre: 'Oscar Cuadros',
     fecha: 'Jueves, 28 de noviembre',
     horaInicio: '10:00 AM',
     tema: 'Implementacion de Iot para la prevencion de desborde de rios',
